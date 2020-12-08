@@ -4,20 +4,21 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import top.vuhe.model.entity.Question
 
+/**
+ * @author vuhe
+ */
 object Context {
     private val log: Logger = LoggerFactory.getLogger(Context::class.java)
 
     /**
      * 算式数量
      */
-    val FORMULA_NUM = 50
-        get() = field
+    const val FORMULA_NUM = 50
 
     /**
      * 算式结果最大值
      */
-    val ANS_MAX = 100
-        get() = field
+    const val ANS_MAX = 100
 
     /**
      * 概率和
@@ -27,20 +28,20 @@ object Context {
     /**
      * 加法算式数量
      */
-    var PLUS_NUM: Long = 25
-        @Synchronized get() = field
+    var PLUS_NUM = 25
+        @Synchronized get
+        private set
 
     /**
      * 减法算式数量
      */
-    var MINUS_NUM: Long = 25
-        @Synchronized get() = field
+    var MINUS_NUM = 25
+        @Synchronized get
+        private set
 
-    var question: Question = Question.from()
-        @Synchronized get() = field
-        @Synchronized set(value) {
-            field = value
-        }
+    var question: Question = Question(ArrayList())
+        @Synchronized get
+        @Synchronized set
 
     @Synchronized
     fun setProportionNumber(plus: Int, minus: Int) {
@@ -57,7 +58,7 @@ object Context {
             throw IllegalArgumentException("The ratio of subtraction formula cannot be less than zero.")
         }
         // 百分比转换为数量
-        PLUS_NUM = (plus * 0.01 * FORMULA_NUM).toLong()
+        PLUS_NUM = (plus * 0.01 * FORMULA_NUM).toInt()
         MINUS_NUM = FORMULA_NUM - PLUS_NUM
     }
 }

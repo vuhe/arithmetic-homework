@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import top.vuhe.controller.Factory
 import top.vuhe.controller.QuestionFactory
 import top.vuhe.model.entity.Question
 
@@ -16,15 +15,13 @@ class MainTest {
     /**
      * 版本 v0.x 测试
      *
-     *
      * 测试算式的产生和运算
      */
     @Test
     @DisplayName("面向过程测试")
     fun test() {
         log.info("v0.x 面向过程测试")
-        val questionFactory: Factory<Question> = QuestionFactory
-        val question: Question = questionFactory.produce()
+        val question: Question = QuestionFactory.produce()
         for ((i, formula) in question.withIndex()) {
             if (i != 0 && i % 5 == 0) {
                 println()

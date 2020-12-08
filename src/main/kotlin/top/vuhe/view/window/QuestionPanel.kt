@@ -8,10 +8,10 @@ import top.vuhe.model.entity.Formula
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import java.awt.GridLayout
-import java.util.*
 import javax.swing.JButton
 import javax.swing.JLabel
 import javax.swing.JPanel
+import kotlin.collections.ArrayList
 
 object QuestionPanel : JPanel() {
     init {
@@ -35,9 +35,9 @@ object FormulasPanel : JPanel() {
 
     init {
         layout = GridLayout(10, 5, 5, 5)
-        val list = LinkedList<FormulaComponent>()
+        val list = ArrayList<FormulaComponent>(Context.FORMULA_NUM + 1)
         for (i in 0 until Context.FORMULA_NUM) {
-            val formulaComponent: FormulaComponent = FormulaComponent()
+            val formulaComponent = FormulaComponent()
             add(formulaComponent)
             list.add(formulaComponent)
         }
@@ -78,9 +78,7 @@ object FormulasPanel : JPanel() {
             add(formulaText)
             add(ansText)
             // 设置题目加载
-            // 设置题目加载
             formulaText.text = "加载中……"
-            // 默认不显示答案
             // 默认不显示答案
             ansText.isVisible = false
         }

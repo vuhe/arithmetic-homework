@@ -11,7 +11,6 @@ import top.vuhe.model.entity.Formula
 import top.vuhe.model.entity.Operator
 import top.vuhe.model.entity.Question
 import java.util.*
-import java.util.stream.Stream
 import kotlin.collections.HashSet
 
 class QuestionTest {
@@ -21,7 +20,7 @@ class QuestionTest {
         /**
          * 默认检验问题数
          */
-        private const val N: Long = 10000
+        private const val N: Int = 10_000
 
         @BeforeAll
         @JvmStatic
@@ -35,18 +34,11 @@ class QuestionTest {
     fun checkRepeatedFormula() {
         log.info("开始运算式生成不重复测试")
 
-        // 创建并行问题流
-        val questionStream: Stream<Question> = Stream.generate(QuestionFactory::produce)
-        questionStream.parallel()
-            .unordered()
-            // 长度限制
-            .limit(N)
-            // 对于每一个问题执行
-            .forEach { question: Question ->
-                checkEveryQuestionRepeatedFormula(
-                    question
-                )
-            }
+        // 创建问题流
+        val questionStream = generateSequence(QuestionFactory::produce)
+        questionStream.take(N)
+            .forEach(this::checkEveryQuestionRepeatedFormula)
+
         log.info("算式检测完成，无重复")
     }
 
@@ -55,38 +47,30 @@ class QuestionTest {
     fun checkNumberOfOperators() {
         log.info("开始运算符在指定范围测试")
 
-        // 创建并行问题流
-        val questionStream: Stream<Question> = Stream.generate(QuestionFactory::produce)
-        questionStream.parallel()
-            .unordered()
-            // 长度限制
-            .limit(N)
-            // 对于每一个问题执行
-            .forEach { question: Question ->
-                checkEveryQuestionNumberOfOperators(
-                    question
-                )
-            }
+        // 创建问题流
+        val questionStream = generateSequence(QuestionFactory::produce)
+        questionStream.take(N)
+            .forEach(this::checkEveryQuestionNumberOfOperators)
+
         log.info("运算符检查完成，符合要求")
     }
 
     private fun checkEveryQuestionRepeatedFormula(question: Question) {
         // 检查一个问题中是否有重复
-        val set: MutableSet<Formula> = HashSet()
+        val set = HashSet<Formula>()
         // 获取迭代器
         question.iterator()
-            // 检查每一个算式
-            .forEachRemaining { formula: Formula ->
+            .forEach {
                 // 断言是否存在
-                Assertions.assertTrue(set.add(formula))
+                Assertions.assertTrue(set.add(it))
             }
     }
 
     private fun checkEveryQuestionNumberOfOperators(question: Question) {
         // 初始化映射
-        val map: MutableMap<Operator, Long> = EnumMap(Operator::class.java)
-        map[Operator.minus] = 0
-        map[Operator.plus] = 0
+        val map = EnumMap<Operator, Long>(Operator::class.java)
+        map[Operator.Minus] = 0
+        map[Operator.Plus] = 0
 
         // 获取迭代器
         question.iterator()
@@ -98,12 +82,12 @@ class QuestionTest {
         // 断言加法数量一致
         Assertions.assertSame(
             Context.PLUS_NUM,
-            map[Operator.plus]
+            map[Operator.Plus]
         )
         // 断言减法数量一致
         Assertions.assertSame(
             Context.MINUS_NUM,
-            map[Operator.minus]
+            map[Operator.Minus]
         )
     }
 }

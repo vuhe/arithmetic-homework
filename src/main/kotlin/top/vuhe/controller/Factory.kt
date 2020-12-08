@@ -4,12 +4,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import top.vuhe.model.Context
 import top.vuhe.model.entity.Formula
-import top.vuhe.model.entity.Formula.Builder
 import top.vuhe.model.entity.Operator
 import top.vuhe.model.entity.Question
-import java.util.stream.Collectors
-import java.util.stream.Stream
-import kotlin.NoSuchElementException
 import kotlin.random.Random
 
 abstract class Factory<T> {
@@ -20,39 +16,24 @@ internal object QuestionFactory : Factory<Question>() {
     private val log: Logger = LoggerFactory.getLogger(QuestionFactory::class.java)
 
     override fun produce(): Question {
-        // 加法
-        val addFormula: Factory<Formula> = AddFormulaFactory
-        var addStream = Stream.generate(addFormula::produce)
-        // 并行化加法算式流
-        // 并行化加法算式流
-        addStream = addStream.parallel() // 忽略顺序
-            .unordered() // 去重
-            .distinct() // 取一定的加法算式
-            .limit(Context.PLUS_NUM)
+        // 去重收集加法算式流
+        var addStream = generateSequence(AddFormulaFactory::produce)
+        addStream = addStream.distinct().take(Context.PLUS_NUM)
 
-        // 减法
-
-        // 减法
-        val subFormula: Factory<Formula> = SubFormulaFactory
-        var subStream = Stream.generate(subFormula::produce)
-        // 并行化减法算式
-        // 并行化减法算式
-        subStream = subStream.parallel() // 忽略顺序
-            .unordered() // 去重
-            .distinct() // 取一定的减法算式
-            .limit(Context.MINUS_NUM)
+        // 去重收集减法算式
+        var subStream = generateSequence(SubFormulaFactory::produce)
+        subStream = subStream.distinct().take(Context.MINUS_NUM)
 
         // 合并流并收集
+        val formulas = ArrayList<Formula>(Context.FORMULA_NUM + 1)
+        formulas.addAll(addStream.toList())
+        formulas.addAll(subStream.toList())
 
-        // 合并流并收集
-        val formulas = Stream.concat(addStream, subStream)
-            .unordered().parallel().collect(Collectors.toList())
-        // 打乱
         // 打乱
         formulas.shuffle()
         log.debug("创建一套习题")
 
-        return Question.from(formulas)
+        return Question(formulas)
     }
 }
 
@@ -74,23 +55,13 @@ internal abstract class FormulaFactory : Factory<Formula>() {
      * @return 算式
      */
     override fun produce(): Formula {
-        // 创建并行生产流
-        val builderStream = Stream.generate(this::build)
-        val builderOp = builderStream.parallel()
-            // 检查答案
-            .filter(this::checkFormula)
-            .limit(1)
-            // 获取一个
-            .findFirst()
-        val builder: Builder = if (builderOp.isPresent) {
-            builderOp.get()
-        } else {
-            log.error("生产错误")
-            throw NoSuchElementException("生产错误")
-        }
+        // 创建生产序列
+        val builderStream = generateSequence(this::build)
+        // 检查并获取生产对象
+        val formula = builderStream.filter(this::checkFormula).first()
 
         log.trace("生产一个算式")
-        return builder.build()
+        return formula
     }
 
     /**
@@ -102,13 +73,14 @@ internal abstract class FormulaFactory : Factory<Formula>() {
      */
     protected abstract fun getOp(): Operator
 
-    private fun build(): Builder {
-        return Formula.builder()
+    private fun build(): Formula {
+        return Formula(
             // 两个数数范围：1 ～ 99
-            .a(RANDOM_NUM.nextInt(99) + 1)
-            .b(RANDOM_NUM.nextInt(99) + 1)
+            a = RANDOM_NUM.nextInt(99) + 1,
+            b = RANDOM_NUM.nextInt(99) + 1,
             // 子类获取运算符
-            .op(getOp())
+            op = getOp()
+        )
     }
 
     /**
@@ -119,21 +91,16 @@ internal abstract class FormulaFactory : Factory<Formula>() {
      * @param builder 算式构建者
      * @return 是否符合要求
      */
-    private fun checkFormula(builder: Builder): Boolean {
-        val ans = builder.ans()
+    private fun checkFormula(builder: Formula): Boolean {
         // 答案是否超出范围
-        return 0 <= ans && ans <= Context.ANS_MAX
+        return builder.ans in 0..Context.ANS_MAX
     }
 }
 
 internal object AddFormulaFactory : FormulaFactory() {
-    override fun getOp(): Operator {
-        return Operator.plus
-    }
+    override fun getOp() = Operator.Plus
 }
 
 internal object SubFormulaFactory : FormulaFactory() {
-    override fun getOp(): Operator {
-        return Operator.minus
-    }
+    override fun getOp() = Operator.Minus
 }
