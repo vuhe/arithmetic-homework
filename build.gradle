@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'top.vuhe'
-version = '0.1.0'
+version = '1.0'
 
 repositories {
     // maven 本地缓存仓库
