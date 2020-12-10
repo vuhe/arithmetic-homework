@@ -11,15 +11,14 @@ import top.vuhe.view.MainFrame
  *
  * @author vuhe
  */
-object MainApplication {
-    private val log: Logger = LoggerFactory.getLogger(MainApplication::class.java)
+class MainApplication {
+    companion object {
+        private val log: Logger = LoggerFactory.getLogger(MainApplication::class.java)
 
-    fun start() {
-        log.info("系统初始化")
-        MainFrame.refresh()
+        @JvmStatic
+        fun main(args: Array<String>) = runBlocking(Dispatchers.Main) {
+            log.info("系统初始化")
+            MainFrame.refresh()
+        }
     }
-}
-
-fun main(args: Array<String>) = runBlocking(Dispatchers.Main) {
-    MainApplication.start()
 }
