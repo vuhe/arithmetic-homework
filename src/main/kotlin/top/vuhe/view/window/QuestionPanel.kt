@@ -4,7 +4,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import top.vuhe.model.Context
 import top.vuhe.model.Context.question
-import top.vuhe.model.entity.Formula
+import top.vuhe.model.entity.Question
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import java.awt.GridLayout
@@ -69,7 +69,6 @@ object FormulasPanel : JPanel() {
     }
 
     class FormulaComponent : JPanel() {
-        private var formula: Formula? = null
         private val formulaText = JLabel()
         private val ansText = JLabel()
 
@@ -93,19 +92,16 @@ object FormulasPanel : JPanel() {
         /**
          * 对单个算式标签设置
          *
-         * @param formula 算式
+         * @param node 算式信息
          */
-        fun setFormula(formula: Formula) {
+        fun setFormula(node: Question.Node) {
             // 设置问题文字
-            formulaText.text = formula.toString()
+            formulaText.text = node.formula
 
             // 设置答案文字
-            ansText.text = formula.ans.toString()
+            ansText.text = node.ans.toString()
             // 默认不显示答案
             ansText.isVisible = false
-
-            // 记录算式
-            this.formula = formula
         }
     }
 }
