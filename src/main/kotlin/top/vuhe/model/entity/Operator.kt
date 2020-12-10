@@ -2,7 +2,7 @@ package top.vuhe.model.entity
 
 enum class Operator {
     // 加法
-    plus() {
+    Plus {
         override fun calculate(a: Int, b: Int): Int {
             return a + b
         }
@@ -13,7 +13,7 @@ enum class Operator {
     },
 
     // 减法
-    minus() {
+    Minus {
         override fun calculate(a: Int, b: Int): Int {
             return a - b
         }

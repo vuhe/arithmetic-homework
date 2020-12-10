@@ -2,12 +2,11 @@ package top.vuhe.view
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import top.vuhe.controller.ControllerExecutor.buildQuestion
+import top.vuhe.controller.ControllerUnit.buildQuestion
 import top.vuhe.view.menu.MainMenuBar
 import top.vuhe.view.window.LoadingPanel
 import top.vuhe.view.window.QuestionPanel
 import java.awt.CardLayout
-import java.util.concurrent.ExecutionException
 import javax.swing.JFrame
 
 object MainFrame : JFrame("加减法口算练习系统") {
@@ -31,8 +30,6 @@ object MainFrame : JFrame("加减法口算练习系统") {
 
         // 准备好后再显示，减少空白等待时间
         isVisible = true
-
-        refresh()
     }
 
     /**
@@ -43,14 +40,7 @@ object MainFrame : JFrame("加减法口算练习系统") {
         startLoading()
 
         // 等待题目生成完毕
-        val result = buildQuestion()
-        try {
-            result.get()
-        } catch (e: InterruptedException) {
-            log.error("题目生成线程出现问题", e)
-        } catch (e: ExecutionException) {
-            log.error("题目生成线程出现问题", e)
-        }
+        buildQuestion()
 
         endLoading()
         log.info("主页面刷新完成")

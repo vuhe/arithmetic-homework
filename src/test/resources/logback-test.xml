@@ -5,7 +5,9 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoder 默认配置为 PatternLayoutEncoder -->
         <encoder>
-            <pattern>%red(%d{yyyy-MM-dd HH:mm:ss.SSS}) %green([%-18thread]) %highlight(%-5level) %boldMagenta(%-35.35class) - %cyan(%msg%n)</pattern>
+            <pattern>
+                %-80(%red(%d{HH:mm:ss.SSS}) %green([%thread])) %highlight(%-5level) %boldMagenta(%-40.40class{40}) - %cyan(%msg%n)
+            </pattern>
         </encoder>
     </appender>
 

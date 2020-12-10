@@ -1,10 +1,10 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.20'
     id 'application'
 }
 
 group = 'top.vuhe'
-version = '0.1.0'
+version = '1.0'
 
 repositories {
     // maven 本地缓存仓库
@@ -29,6 +29,10 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    // 协程
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.4.2-native-mt'
 
     // 日志依赖
     compile 'org.slf4j:slf4j-api:1.7.30'
