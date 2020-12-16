@@ -96,7 +96,7 @@ object FormulasPanel : JPanel() {
          */
         fun setFormula(node: Question.Node) {
             // 设置问题文字
-            formulaText.text = node.formula
+            formulaText.text = node.formula.toString()
 
             // 设置答案文字
             ansText.text = node.ans.toString()

@@ -7,7 +7,7 @@ class Question(formulas: List<Formula>) : Iterable<Question.Node> {
         val list = ArrayList<Node>(formulas.size + 1)
         for (f in formulas) {
             list.add(Node(
-                formula = f.toString(),
+                formula = f,
                 ans = f.ans
             ))
         }
@@ -19,7 +19,7 @@ class Question(formulas: List<Formula>) : Iterable<Question.Node> {
     }
 
     data class Node(
-        val formula: String,
+        val formula: Formula,
         val ans: Int,
         var state: State = State.NotDo,
         var userAns: Int? = null,
