@@ -32,7 +32,7 @@ class FormulaTest {
          */
         @JvmStatic
         fun factoryStream(): Array<Factory<Formula>> {
-            return arrayOf(AddFormulaFactory, SubFormulaFactory)
+            return arrayOf(FormulaFactory.Add, FormulaFactory.Sub)
         }
     }
 

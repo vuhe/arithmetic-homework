@@ -14,7 +14,7 @@ object ControllerUnit {
      */
     fun buildQuestion() = runBlocking(Dispatchers.IO) {
         log.info("创建线程更新习题")
-        val question = QuestionFactory.produce()
+        val question = QuestionFactory.HalfHalf.produce()
         Context.question = question
         log.info("创建完成")
     }

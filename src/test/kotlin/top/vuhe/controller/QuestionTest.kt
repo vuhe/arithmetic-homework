@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import top.vuhe.model.Context
 import top.vuhe.model.entity.Formula
 import top.vuhe.model.entity.Operator
 import top.vuhe.model.entity.Question
@@ -35,7 +34,7 @@ class QuestionTest {
         log.info("开始运算式生成不重复测试")
 
         // 创建问题流
-        val questionStream = generateSequence(QuestionFactory::produce)
+        val questionStream = generateSequence(QuestionFactory.HalfHalf::produce)
         questionStream.take(N)
             .forEach(this::checkEveryQuestionRepeatedFormula)
 
@@ -48,7 +47,7 @@ class QuestionTest {
         log.info("开始运算符在指定范围测试")
 
         // 创建问题流
-        val questionStream = generateSequence(QuestionFactory::produce)
+        val questionStream = generateSequence(QuestionFactory.HalfHalf::produce)
         questionStream.take(N)
             .forEach(this::checkEveryQuestionNumberOfOperators)
 
@@ -81,12 +80,12 @@ class QuestionTest {
 
         // 断言加法数量一致
         Assertions.assertSame(
-            Context.PLUS_NUM,
+            25,
             map[Operator.Plus]
         )
         // 断言减法数量一致
         Assertions.assertSame(
-            Context.MINUS_NUM,
+            25,
             map[Operator.Minus]
         )
     }

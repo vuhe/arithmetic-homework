@@ -3,7 +3,6 @@ package top.vuhe.view
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import top.vuhe.controller.ControllerUnit.buildQuestion
-import top.vuhe.view.menu.MainMenuBar
 import top.vuhe.view.window.LoadingPanel
 import top.vuhe.view.window.QuestionPanel
 import java.awt.CardLayout
@@ -19,8 +18,6 @@ object MainFrame : JFrame("加减法口算练习系统") {
         isResizable = false
         layout = CARD_LAYOUT
 
-        // 设置菜单
-        jMenuBar = MainMenuBar
         // 设置两个切换页面
         add(LoadingPanel, "loading")
         add(QuestionPanel, "question")
