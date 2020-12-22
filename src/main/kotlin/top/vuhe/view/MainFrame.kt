@@ -17,7 +17,7 @@ object MainFrame : JFrame("加减法口算练习系统") {
 
     init {
         defaultCloseOperation = EXIT_ON_CLOSE
-        setSize(550, 400)
+        setSize(800, 500)
         isResizable = false
         layout = CARD_LAYOUT
 
@@ -56,7 +56,7 @@ object MainFrame : JFrame("加减法口算练习系统") {
      */
     private fun endLoading() {
         // 刷新面板信息
-        QuestionPanel.refresh()
+        QuestionPanel.build()
 
         // 显示题目
         CARD_LAYOUT.show(contentPane, "question")
