@@ -108,21 +108,26 @@ object FormulasPanel : JPanel() {
 
 object FunctionPanel: JPanel() {
     private val log: Logger = LoggerFactory.getLogger(FunctionPanel::class.java)
-    private val showAns = JButton("显示答案")
-    init {
-        layout = FlowLayout(FlowLayout.CENTER)
+    private val showAns = JButton("检查答案")
+    private val reset = JButton("重置")
+    private val save = JButton("保存")
 
-        // 目前仅有一个显示答案的按钮
+    init {
         // 在显示答案之后会将按钮禁用
         showAns.addActionListener {
-            val panel = FormulasPanel
-            panel.showAns()
+            FormulasPanel.showAns()
             showAns.isEnabled = false
             log.info("显示答案（button）")
         }
+    }
+
+    init {
+        layout = FlowLayout(FlowLayout.CENTER)
 
         // 添加
         add(showAns)
+        add(reset)
+        add(save)
 
         log.info("获取功能按钮面板")
     }

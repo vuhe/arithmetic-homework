@@ -21,7 +21,7 @@ class MainTest {
     @DisplayName("面向过程测试")
     fun test() {
         log.info("v0.x 面向过程测试")
-        val question: Question = QuestionFactory.produce()
+        val question: Question = QuestionFactory.HalfHalf.produce()
         for ((i, formula) in question.withIndex()) {
             if (i != 0 && i % 5 == 0) {
                 println()

@@ -2,10 +2,13 @@ package top.vuhe.view
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import top.vuhe.controller.ControllerUnit.buildQuestion
+import top.vuhe.controller.ControllerUnit
+import top.vuhe.model.Context
 import top.vuhe.view.window.LoadingPanel
+import top.vuhe.view.window.OperationPanel
 import top.vuhe.view.window.QuestionPanel
 import java.awt.CardLayout
+import java.io.File
 import javax.swing.JFrame
 
 object MainFrame : JFrame("加减法口算练习系统") {
@@ -18,29 +21,26 @@ object MainFrame : JFrame("加减法口算练习系统") {
         isResizable = false
         layout = CARD_LAYOUT
 
-        // 设置两个切换页面
+        // 设置三个切换页面
+        add(OperationPanel, "operation")
         add(LoadingPanel, "loading")
         add(QuestionPanel, "question")
 
-        // 默认显示加载中
-        CARD_LAYOUT.show(contentPane, "loading")
+        // 默认进入是为选择界面
+        CARD_LAYOUT.show(contentPane, "operation")
 
         // 准备好后再显示，减少空白等待时间
         isVisible = true
     }
 
-    /**
-     * 刷新主页面
-     */
-    fun refresh() {
-        log.info("刷新主页面")
+    fun loading() {
         startLoading()
 
-        // 等待题目生成完毕
-        buildQuestion()
+        ControllerUnit.readQuestionFromFile(
+            File("${Context.FILE_PATH}/${Context.file}")
+        )
 
         endLoading()
-        log.info("主页面刷新完成")
     }
 
     /**

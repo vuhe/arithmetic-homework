@@ -15,7 +15,7 @@ class JsonTest {
     @DisplayName("Json 转换测试")
     fun checkRepeatedFormula() {
         log.info("测试转换")
-        val question = QuestionFactory.produce()
+        val question = QuestionFactory.HalfHalf.produce()
 
         val json = JsonUnit.toJson(question)
         print(json)

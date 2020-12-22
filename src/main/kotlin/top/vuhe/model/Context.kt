@@ -20,6 +20,12 @@ object Context {
      */
     const val ANS_MAX = 100
 
+    const val FILE_PATH: String = "./exercise"
+
+    var file: String? = null
+        @Synchronized get
+        @Synchronized set
+
     var question: Question = Question(ArrayList())
         @Synchronized get
         @Synchronized set

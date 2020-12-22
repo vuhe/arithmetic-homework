@@ -1,6 +1,5 @@
 package top.vuhe.view.window
 
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.FlowLayout
 import javax.swing.JLabel
@@ -12,7 +11,7 @@ import javax.swing.JPanel
  * @author vuhe
  */
 object LoadingPanel : JPanel() {
-    private val log: Logger = LoggerFactory.getLogger(LoadingPanel::class.java)
+    private val log = LoggerFactory.getLogger(LoadingPanel::class.java)
 
     init {
         layout = FlowLayout(FlowLayout.CENTER)
