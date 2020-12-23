@@ -6,6 +6,7 @@ import top.vuhe.model.Context.FORMULA_NUM
 import top.vuhe.model.Context.question
 import top.vuhe.model.entity.Question
 import java.awt.BorderLayout
+import java.awt.Color
 import java.awt.FlowLayout
 import java.awt.GridLayout
 import java.awt.event.KeyAdapter
@@ -32,35 +33,29 @@ object QuestionPanel : JPanel() {
 
 object FormulasPanel : JPanel() {
     private val log: Logger = LoggerFactory.getLogger(FormulasPanel::class.java)
-    private val labels: List<FormulaComponent>
+    private val labels = ArrayList<FormulaComponent>(FORMULA_NUM + 1)
 
     init {
         layout = GridLayout(10, 5, 5, 5)
-        val list = ArrayList<FormulaComponent>(FORMULA_NUM + 1)
-        for (i in 0 until FORMULA_NUM) {
-            val formulaComponent = FormulaComponent()
-            add(formulaComponent)
-            list.add(formulaComponent)
-        }
-        labels = list
     }
 
     /**
      * 循环调用标签中的显示方法
      */
-    fun showAns():Boolean {
+    fun checkAns(): Boolean {
         log.info("显示所有算式答案")
         val isAllDone = labels.fold(true) { a, label -> a && label.hasUserAns() }
         if (isAllDone) {
             for (i in labels) {
-                i.showAns()
+                i.checkAns()
             }
         } else {
             JOptionPane.showMessageDialog(
                 null,
                 "未做完前不能提交",
                 "警告",
-                JOptionPane.WARNING_MESSAGE)
+                JOptionPane.WARNING_MESSAGE
+            )
         }
         return isAllDone
     }
@@ -70,16 +65,14 @@ object FormulasPanel : JPanel() {
      */
     fun update() {
         val question = question
-        // 算式 和 算式标签迭代器
-        val itProblem = question.iterator()
-        val itLabel = labels.iterator()
-        // 循环设置
-        while (itLabel.hasNext() && itProblem.hasNext()) {
-            itLabel.next().setFormula(itProblem.next())
+        for (q in question) {
+            val f = FormulaComponent(q)
+            labels.add(f)
+            add(f)
         }
     }
 
-    class FormulaComponent : JPanel() {
+    class FormulaComponent(private val node: Question.Node) : JPanel() {
         private val formulaText = JLabel()
         private val userAns = JTextField(2)
         private val ansText = JLabel()
@@ -88,6 +81,16 @@ object FormulasPanel : JPanel() {
          * 属性设置
          */
         init {
+
+            // TODO-对状态进行复原
+            // 设置问题文字
+            formulaText.text = node.formula.toString()
+
+            // 设置答案文字
+            ansText.text = node.ans.toString()
+            // 默认不显示答案
+            ansText.isVisible = false
+
             userAns.addKeyListener(object : KeyAdapter() {
                 override fun keyTyped(e: KeyEvent) {
                     val key = "0123456789" + 8.toChar()
@@ -95,12 +98,14 @@ object FormulasPanel : JPanel() {
                         //如果不是数字则取消
                         e.consume()
                     }
+                    // 设置状态
+                    node.state = if (userAns.text == "") {
+                        Question.State.NotDo
+                    } else {
+                        Question.State.Done
+                    }
                 }
             })
-            // 设置题目加载
-            formulaText.text = "加载中……"
-            // 默认不显示答案
-            ansText.isVisible = false
         }
 
         init {
@@ -113,23 +118,19 @@ object FormulasPanel : JPanel() {
         /**
          * 对一个标签中信息进行替换，显示答案
          */
-        fun showAns() {
+        fun checkAns() {
+            // 禁止再编辑
+            userAns.isEditable = false
+            val userInput = userAns.text
+            // 检查结果，设置状态
+            if (userInput == ansText.text) {
+                ansText.foreground = Color.GREEN
+                node.state = Question.State.Correct
+            } else {
+                ansText.foreground = Color.RED
+                node.state = Question.State.Wrong
+            }
             ansText.isVisible = true
-        }
-
-        /**
-         * 对单个算式标签设置
-         *
-         * @param node 算式信息
-         */
-        fun setFormula(node: Question.Node) {
-            // 设置问题文字
-            formulaText.text = node.formula.toString()
-
-            // 设置答案文字
-            ansText.text = node.ans.toString()
-            // 默认不显示答案
-            ansText.isVisible = false
         }
 
         fun hasUserAns(): Boolean {
@@ -141,13 +142,17 @@ object FormulasPanel : JPanel() {
 object FunctionPanel : JPanel() {
     private val log: Logger = LoggerFactory.getLogger(FunctionPanel::class.java)
     private val showAns = JButton("检查答案")
+
+    // TODO-重置问题
     private val reset = JButton("重置")
+
+    // TODO-保存状态，写入文件
     private val save = JButton("保存")
 
     init {
         // 在显示答案之后会将按钮禁用
         showAns.addActionListener {
-            if (FormulasPanel.showAns()) {
+            if (FormulasPanel.checkAns()) {
                 showAns.isEnabled = false
                 log.info("显示答案（button）")
             }

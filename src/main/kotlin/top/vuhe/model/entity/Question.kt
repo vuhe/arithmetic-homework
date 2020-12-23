@@ -15,7 +15,7 @@ class Question(formulas: List<Formula>) : Iterable<Question.Node> {
     }
 
     enum class State {
-        NotDo, Wrong, Correct
+        NotDo, Done, Wrong, Correct
     }
 
     data class Node(
