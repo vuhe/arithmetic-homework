@@ -7,20 +7,18 @@ class Question(formulas: List<Formula>) : Iterable<Question.Node> {
         val list = ArrayList<Node>(formulas.size + 1)
         for (f in formulas) {
             list.add(Node(
-                formula = f.toString(),
-                ans = f.ans
+                formula = f,
             ))
         }
         questions = list
     }
 
     enum class State {
-        NotDo, Wrong, Correct
+        NotDo, Done, Wrong, Correct
     }
 
     data class Node(
-        val formula: String,
-        val ans: Int,
+        val formula: Formula,
         var state: State = State.NotDo,
         var userAns: Int? = null,
     )

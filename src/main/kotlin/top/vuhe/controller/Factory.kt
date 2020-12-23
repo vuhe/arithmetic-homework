@@ -12,17 +12,20 @@ abstract class Factory<T> {
     abstract fun produce(): T
 }
 
-internal object QuestionFactory : Factory<Question>() {
+internal sealed class QuestionFactory(
+    private val plusNum: Int,
+    private val minusNum: Int
+) : Factory<Question>() {
     private val log: Logger = LoggerFactory.getLogger(QuestionFactory::class.java)
 
     override fun produce(): Question {
         // 去重收集加法算式流
-        var addStream = generateSequence(AddFormulaFactory::produce)
-        addStream = addStream.distinct().take(Context.PLUS_NUM)
+        var addStream = generateSequence(FormulaFactory.Add::produce)
+        addStream = addStream.distinct().take(plusNum)
 
         // 去重收集减法算式
-        var subStream = generateSequence(SubFormulaFactory::produce)
-        subStream = subStream.distinct().take(Context.MINUS_NUM)
+        var subStream = generateSequence(FormulaFactory.Sub::produce)
+        subStream = subStream.distinct().take(minusNum)
 
         // 合并流并收集
         val formulas = ArrayList<Formula>(Context.FORMULA_NUM + 1)
@@ -35,9 +38,15 @@ internal object QuestionFactory : Factory<Question>() {
 
         return Question(formulas)
     }
+
+    internal object AllPlus : QuestionFactory(50, 0)
+    internal object AllMinus : QuestionFactory(0, 50)
+    internal object HalfHalf : QuestionFactory(25, 25)
 }
 
-internal abstract class FormulaFactory : Factory<Formula>() {
+internal sealed class FormulaFactory(
+    private val op: Operator
+) : Factory<Formula>() {
     companion object {
         private val log: Logger = LoggerFactory.getLogger(FormulaFactory::class.java)
 
@@ -64,22 +73,13 @@ internal abstract class FormulaFactory : Factory<Formula>() {
         return formula
     }
 
-    /**
-     * 获取一个运算符
-     *
-     * 此方法行为由实现的子类控制
-     *
-     * @return 运算符
-     */
-    protected abstract fun getOp(): Operator
-
     private fun build(): Formula {
         return Formula(
             // 两个数数范围：1 ～ 99
             a = RANDOM_NUM.nextInt(99) + 1,
             b = RANDOM_NUM.nextInt(99) + 1,
             // 子类获取运算符
-            op = getOp()
+            op = op
         )
     }
 
@@ -95,12 +95,7 @@ internal abstract class FormulaFactory : Factory<Formula>() {
         // 答案是否超出范围
         return builder.ans in 0..Context.ANS_MAX
     }
-}
 
-internal object AddFormulaFactory : FormulaFactory() {
-    override fun getOp() = Operator.Plus
-}
-
-internal object SubFormulaFactory : FormulaFactory() {
-    override fun getOp() = Operator.Minus
+    internal object Add : FormulaFactory(Operator.Plus)
+    internal object Sub : FormulaFactory(Operator.Minus)
 }

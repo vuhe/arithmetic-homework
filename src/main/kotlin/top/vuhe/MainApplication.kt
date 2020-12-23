@@ -18,7 +18,7 @@ class MainApplication {
         @JvmStatic
         fun main(args: Array<String>) = runBlocking(Dispatchers.Main) {
             log.info("系统初始化")
-            MainFrame.refresh()
+            val start = MainFrame
         }
     }
 }
