@@ -28,7 +28,6 @@ object QuestionPanel : JPanel() {
      */
     fun build() {
         FormulasPanel.update()
-        FunctionPanel.update()
     }
 }
 
@@ -63,10 +62,17 @@ object FormulasPanel : JPanel() {
      * 用于接受来自UI刷新的信息通知
      */
     fun update() {
+        var isDone = true
         question.forEach {
             val f = FormulaComponent(it)
             labels.add(f)
             add(f)
+            isDone = isDone &&
+                    (it.state == Question.State.Correct ||
+                            it.state == Question.State.Wrong)
+        }
+        if (isDone) {
+            FunctionPanel.isDone()
         }
     }
 
@@ -87,8 +93,6 @@ object FormulasPanel : JPanel() {
          * 属性设置
          */
         init {
-
-            // TODO-对状态进行复原
             // 设置问题文字
             formulaText.text = node.formula.toString()
 
@@ -104,14 +108,16 @@ object FormulasPanel : JPanel() {
                         //如果不是数字则取消
                         e.consume()
                     }
-                    // 设置状态
-                    if (userAns.text == "") {
-                        node.state = Question.State.NotDo
-                    } else {
-                        node.state = Question.State.Done
-                    }
                 }
             })
+
+            // 习题复原
+            if (node.state != Question.State.NotDo) {
+                userAns.text = node.userAns.toString()
+                if (node.state != Question.State.Done) {
+                    checkAns()
+                }
+            }
         }
 
         init {
@@ -151,6 +157,12 @@ object FormulasPanel : JPanel() {
         }
 
         fun save() {
+            // 设置状态
+            if (node.state == Question.State.NotDo
+                && userAns.text != ""
+            ) {
+                node.state = Question.State.Done
+            }
             if (node.state != Question.State.NotDo) {
                 node.userAns = userAns.text.toInt()
             }
@@ -174,6 +186,7 @@ object FunctionPanel : JPanel() {
         }
         reset.addActionListener {
             FormulasPanel.reset()
+            showAns.isEnabled = true
         }
         save.addActionListener {
             FormulasPanel.save()
@@ -195,7 +208,7 @@ object FunctionPanel : JPanel() {
     /**
      * 用于接受来自UI刷新的通知
      */
-    fun update() {
-        showAns.isEnabled = true
+    fun isDone() {
+        showAns.isEnabled = false
     }
 }
