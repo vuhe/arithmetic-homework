@@ -93,7 +93,7 @@ object FormulasPanel : JPanel() {
             formulaText.text = node.formula.toString()
 
             // 设置答案文字
-            ansText.text = node.ans.toString()
+            ansText.text = node.formula.ans.toString()
             // 默认不显示答案
             ansText.isVisible = false
 

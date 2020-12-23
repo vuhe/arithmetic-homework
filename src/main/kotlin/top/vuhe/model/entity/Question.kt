@@ -8,7 +8,6 @@ class Question(formulas: List<Formula>) : Iterable<Question.Node> {
         for (f in formulas) {
             list.add(Node(
                 formula = f,
-                ans = f.ans
             ))
         }
         questions = list
@@ -20,7 +19,6 @@ class Question(formulas: List<Formula>) : Iterable<Question.Node> {
 
     data class Node(
         val formula: Formula,
-        val ans: Int,
         var state: State = State.NotDo,
         var userAns: Int? = null,
     )
