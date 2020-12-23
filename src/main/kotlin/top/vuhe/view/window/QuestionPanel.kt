@@ -2,6 +2,7 @@ package top.vuhe.view.window
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import top.vuhe.controller.ControllerUnit
 import top.vuhe.model.Context.FORMULA_NUM
 import top.vuhe.model.Context.question
 import top.vuhe.model.entity.Question
@@ -46,9 +47,7 @@ object FormulasPanel : JPanel() {
         log.info("显示所有算式答案")
         val isAllDone = labels.fold(true) { a, label -> a && label.hasUserAns() }
         if (isAllDone) {
-            for (i in labels) {
-                i.checkAns()
-            }
+            labels.forEach { it.checkAns() }
         } else {
             JOptionPane.showMessageDialog(
                 null,
@@ -64,12 +63,19 @@ object FormulasPanel : JPanel() {
      * 用于接受来自UI刷新的信息通知
      */
     fun update() {
-        val question = question
-        for (q in question) {
-            val f = FormulaComponent(q)
+        question.forEach {
+            val f = FormulaComponent(it)
             labels.add(f)
             add(f)
         }
+    }
+
+    fun reset() {
+        labels.forEach { it.reset() }
+    }
+
+    fun save() {
+        labels.forEach { it.save() }
     }
 
     class FormulaComponent(private val node: Question.Node) : JPanel() {
@@ -99,10 +105,10 @@ object FormulasPanel : JPanel() {
                         e.consume()
                     }
                     // 设置状态
-                    node.state = if (userAns.text == "") {
-                        Question.State.NotDo
+                    if (userAns.text == "") {
+                        node.state = Question.State.NotDo
                     } else {
-                        Question.State.Done
+                        node.state = Question.State.Done
                     }
                 }
             })
@@ -136,17 +142,26 @@ object FormulasPanel : JPanel() {
         fun hasUserAns(): Boolean {
             return userAns.text != ""
         }
+
+        fun reset() {
+            userAns.text = ""
+            ansText.isVisible = false
+            node.state = Question.State.NotDo
+            node.userAns = null
+        }
+
+        fun save() {
+            if (node.state != Question.State.NotDo) {
+                node.userAns = userAns.text.toInt()
+            }
+        }
     }
 }
 
 object FunctionPanel : JPanel() {
     private val log: Logger = LoggerFactory.getLogger(FunctionPanel::class.java)
     private val showAns = JButton("检查答案")
-
-    // TODO-重置问题
     private val reset = JButton("重置")
-
-    // TODO-保存状态，写入文件
     private val save = JButton("保存")
 
     init {
@@ -156,6 +171,13 @@ object FunctionPanel : JPanel() {
                 showAns.isEnabled = false
                 log.info("显示答案（button）")
             }
+        }
+        reset.addActionListener {
+            FormulasPanel.reset()
+        }
+        save.addActionListener {
+            FormulasPanel.save()
+            ControllerUnit.writeQuestionToFile(question)
         }
     }
 
