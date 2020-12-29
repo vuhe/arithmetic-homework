@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 import top.vuhe.controller.ControllerUnit
 import top.vuhe.model.Context
 import top.vuhe.view.MainFrame
+import java.awt.GridLayout
 import java.io.File
 import java.util.*
 import javax.swing.*
@@ -55,9 +56,10 @@ object OperationPanel : JPanel() {
      * 主要页面 初始化
      */
     init {
-        layout = BoxLayout(this, BoxLayout.Y_AXIS)
+        border = BorderFactory.createEmptyBorder(50, 100, 150, 100)
+        layout = GridLayout(4, 1, 20, 20)
 
-        add(JLabel("若无习题，请先生成"))
+        add(JLabel("提示：若无习题，请先生成"))
         add(buildQuestion)
         add(selectedExercise)
         add(startExercise)
