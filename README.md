@@ -2,8 +2,6 @@
 
 ## 说明
 
-[SoftwareStructure](https://github.com/vuhe/SoftwareStructure) 仓库的 Kotlin 版本
-
 软件构造课程作业练习的 Kotlin 版本，本系统为练习作品
 
 如果您认为本系统侵犯了您的权益，可以联系我处理
