@@ -2,6 +2,9 @@ package top.vuhe.controller
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.slf4j.LoggerFactory
 import top.vuhe.model.Context
 import top.vuhe.model.entity.Question
@@ -46,7 +49,7 @@ object ControllerUnit {
         require(file.isFile) { "传入文件错误" }
 
         val json = file.readText()
-        Context.question = JsonUnit.fromJson(json)
+        Context.question = Json.decodeFromString(json)
         log.info("读取完成")
     }
 
@@ -56,7 +59,7 @@ object ControllerUnit {
     }
 
     private fun writeQuestion(question: Question, file: File) {
-        val json = JsonUnit.toJson(question)
+        val json = Json.encodeToString(question)
         file.writeText(json)
     }
 }

@@ -1,17 +1,20 @@
 package top.vuhe.model.entity
 
-class Question(formulas: List<Formula>) : Iterable<Question.Node> {
-    private val questions = formulas.map { Node(formula = it) }
+@kotlinx.serialization.Serializable
+class Question(private val questions: List<Node>) : Iterable<Question.Node> by questions {
 
     enum class State {
         NotDo, Done, Wrong, Correct
     }
 
+    @kotlinx.serialization.Serializable
     data class Node(
         val formula: Formula,
         var state: State = State.NotDo,
         var userAns: Int? = null,
     )
 
-    override fun iterator() = questions.iterator()
+    companion object {
+        fun form(formulas: List<Formula>) = Question(formulas.map { Node(formula = it) })
+    }
 }

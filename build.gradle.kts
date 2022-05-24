@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.6.21"
+    kotlin("plugin.serialization") version "1.6.21"
     application
 }
 
@@ -24,10 +25,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.1-native-mt")
 
     // 日志
-    implementation("ch.qos.logback:logback-classic:1.2.9")
+    implementation("ch.qos.logback:logback-classic:1.2.11")
 
-    // json
-    implementation("com.google.code.gson:gson:2.9.0")
+    // 序列化
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 
     // 测试
     testImplementation(kotlin("test"))

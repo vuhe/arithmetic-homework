@@ -1,5 +1,6 @@
 package top.vuhe.model.entity
 
+@kotlinx.serialization.Serializable
 enum class Operator {
     // 加法
     Plus {

@@ -34,7 +34,7 @@ internal sealed class QuestionFactory(
         formulas.shuffled()
         log.debug("创建一套习题")
 
-        return Question(formulas.toList())
+        return Question.form(formulas.toList())
     }
 
     object AllPlus : QuestionFactory(50, 0)
