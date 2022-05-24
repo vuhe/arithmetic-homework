@@ -22,9 +22,7 @@ class JsonTest {
 
         println()
 
-        val testQuestion = JsonUnit.fromJson(json, Question::class.java)
-        for (f in testQuestion) {
-            println(f)
-        }
+        val testQuestion: Question = JsonUnit.fromJson(json)
+        testQuestion.forEach { println(it) }
     }
 }

@@ -20,39 +20,35 @@ internal sealed class QuestionFactory(
 
     override fun produce(): Question {
         // 去重收集加法算式流
-        var addStream = generateSequence(FormulaFactory.Add::produce)
-        addStream = addStream.distinct().take(plusNum)
+        val addStream = generateSequence(FormulaFactory.Add::produce)
+            .distinct().take(plusNum)
 
         // 去重收集减法算式
-        var subStream = generateSequence(FormulaFactory.Sub::produce)
-        subStream = subStream.distinct().take(minusNum)
+        val subStream = generateSequence(FormulaFactory.Sub::produce)
+            .distinct().take(minusNum)
 
         // 合并流并收集
-        val formulas = ArrayList<Formula>(Context.FORMULA_NUM + 1)
-        formulas.addAll(addStream.toList())
-        formulas.addAll(subStream.toList())
+        val formulas = addStream + subStream
 
         // 打乱
-        formulas.shuffle()
+        formulas.shuffled()
         log.debug("创建一套习题")
 
-        return Question(formulas)
+        return Question(formulas.toList())
     }
 
-    internal object AllPlus : QuestionFactory(50, 0)
-    internal object AllMinus : QuestionFactory(0, 50)
-    internal object HalfHalf : QuestionFactory(25, 25)
+    object AllPlus : QuestionFactory(50, 0)
+    object AllMinus : QuestionFactory(0, 50)
+    object HalfHalf : QuestionFactory(25, 25)
 }
 
-internal sealed class FormulaFactory(
+sealed class FormulaFactory(
     private val op: Operator
 ) : Factory<Formula>() {
     companion object {
         private val log: Logger = LoggerFactory.getLogger(FormulaFactory::class.java)
 
-        /**
-         * 随机数生产器
-         */
+        /** 随机数生产器 */
         private val RANDOM_NUM = Random(47)
     }
 
@@ -67,7 +63,7 @@ internal sealed class FormulaFactory(
         // 创建生产序列
         val builderStream = generateSequence(this::build)
         // 检查并获取生产对象
-        val formula = builderStream.filter(this::checkFormula).first()
+        val formula = builderStream.filter { it.check() }.first()
 
         log.trace("生产一个算式")
         return formula
@@ -88,12 +84,12 @@ internal sealed class FormulaFactory(
      *
      * 符合答案标准：(0 <= ans <= 100)
      *
-     * @param builder 算式构建者
+     * @receiver 算式构建者
      * @return 是否符合要求
      */
-    private fun checkFormula(builder: Formula): Boolean {
+    private fun Formula.check(): Boolean {
         // 答案是否超出范围
-        return builder.ans in 0..Context.ANS_MAX
+        return ans in 0..Context.ANS_MAX
     }
 
     internal object Add : FormulaFactory(Operator.Plus)

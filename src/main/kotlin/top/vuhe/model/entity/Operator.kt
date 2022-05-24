@@ -3,24 +3,14 @@ package top.vuhe.model.entity
 enum class Operator {
     // 加法
     Plus {
-        override fun calculate(a: Int, b: Int): Int {
-            return a + b
-        }
-
-        override fun toString(): String {
-            return "+"
-        }
+        override fun calculate(a: Int, b: Int) = a + b
+        override fun toString() = "+"
     },
 
     // 减法
     Minus {
-        override fun calculate(a: Int, b: Int): Int {
-            return a - b
-        }
-
-        override fun toString(): String {
-            return "-"
-        }
+        override fun calculate(a: Int, b: Int) = a - b
+        override fun toString() = "-"
     };
 
     /**

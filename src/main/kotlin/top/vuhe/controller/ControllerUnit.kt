@@ -11,9 +11,7 @@ import java.time.LocalDateTime
 object ControllerUnit {
     private val log = LoggerFactory.getLogger(ControllerUnit::class.java)
 
-    /**
-     * 生成习题文件
-     */
+    /** 生成习题文件 */
     fun buildQuestionToFile() = runBlocking(Dispatchers.IO) {
         val date = LocalDateTime.now()
         val prefix = "${Context.FILE_PATH}/${date.year}_${date.monthValue}_${date.dayOfMonth}_"
@@ -45,11 +43,10 @@ object ControllerUnit {
     fun readQuestionFromFile(file: File) = runBlocking(Dispatchers.IO) {
         log.info("读取文件")
         // 检查是否是文件
-        if (!file.isFile) {
-            throw IllegalArgumentException("传入文件错误")
-        }
+        require(file.isFile) { "传入文件错误" }
+
         val json = file.readText()
-        Context.question = JsonUnit.fromJson(json, Question::class.java)
+        Context.question = JsonUnit.fromJson(json)
         log.info("读取完成")
     }
 

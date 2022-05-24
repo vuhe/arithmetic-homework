@@ -1,17 +1,7 @@
 package top.vuhe.model.entity
 
 class Question(formulas: List<Formula>) : Iterable<Question.Node> {
-    private val questions: List<Node>
-
-    init {
-        val list = ArrayList<Node>(formulas.size + 1)
-        for (f in formulas) {
-            list.add(Node(
-                formula = f,
-            ))
-        }
-        questions = list
-    }
+    private val questions = formulas.map { Node(formula = it) }
 
     enum class State {
         NotDo, Done, Wrong, Correct
@@ -23,7 +13,5 @@ class Question(formulas: List<Formula>) : Iterable<Question.Node> {
         var userAns: Int? = null,
     )
 
-    override fun iterator(): Iterator<Node> {
-        return questions.iterator()
-    }
+    override fun iterator() = questions.iterator()
 }

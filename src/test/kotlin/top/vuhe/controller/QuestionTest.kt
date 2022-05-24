@@ -74,7 +74,7 @@ class QuestionTest {
         // 获取迭代器
         question.iterator()
             // 添加每一个运算符
-            .forEachRemaining { (formula, _, _, _) ->
+            .forEachRemaining { (formula, _, _) ->
                 map[formula.op] = map[formula.op]!! + 1
             }
 

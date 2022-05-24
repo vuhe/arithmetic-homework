@@ -26,7 +26,7 @@ class MainTest {
             if (i != 0 && i % 5 == 0) {
                 println()
             }
-            print("$formula${String.format("%3d   ", formula.ans)}")
+            print("$formula${String.format("%3d   ", formula.userAns)}")
         }
         println("\n")
     }

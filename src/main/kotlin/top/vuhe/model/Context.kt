@@ -26,7 +26,7 @@ object Context {
         @Synchronized get
         @Synchronized set
 
-    var question: Question = Question(ArrayList())
+    var question: Question = Question(emptyList())
         @Synchronized get
         @Synchronized set
 }
