@@ -1,11 +1,11 @@
-package top.vuhe.view.window
+package top.vuhe.view
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import top.vuhe.controller.ControllerUnit
-import top.vuhe.model.Context.FORMULA_NUM
-import top.vuhe.model.Context.question
-import top.vuhe.model.entity.Question
+import top.vuhe.tool.Serialization
+import top.vuhe.Context.FORMULA_NUM
+import top.vuhe.Context.question
+import top.vuhe.model.Question
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.FlowLayout
@@ -103,11 +103,8 @@ object FormulasPanel : JPanel() {
 
             userAns.addKeyListener(object : KeyAdapter() {
                 override fun keyTyped(e: KeyEvent) {
-                    val key = "0123456789" + 8.toChar()
-                    if (key.indexOf(e.keyChar) < 0) {
-                        //如果不是数字则取消
-                        e.consume()
-                    }
+                    //如果不是数字则取消
+                    if (!e.keyChar.isDigit()) e.consume()
                 }
             })
 
@@ -190,7 +187,7 @@ object FunctionPanel : JPanel() {
         }
         save.addActionListener {
             FormulasPanel.save()
-            ControllerUnit.writeQuestionToFile(question)
+            Serialization.writeQuestionToFile(question)
         }
     }
 

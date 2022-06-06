@@ -1,4 +1,4 @@
-package top.vuhe.model.entity
+package top.vuhe.model
 
 @kotlinx.serialization.Serializable
 enum class Operator {

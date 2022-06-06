@@ -1,4 +1,4 @@
-package top.vuhe.view.window
+package top.vuhe.view
 
 import org.slf4j.LoggerFactory
 import java.awt.FlowLayout

@@ -1,4 +1,4 @@
-package top.vuhe.controller
+package top.vuhe.tool
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
@@ -6,9 +6,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import top.vuhe.model.entity.Formula
-import top.vuhe.model.entity.Operator
-import top.vuhe.model.entity.Question
+import top.vuhe.model.Formula
+import top.vuhe.model.Operator
+import top.vuhe.model.Question
 import java.util.*
 import kotlin.collections.HashSet
 

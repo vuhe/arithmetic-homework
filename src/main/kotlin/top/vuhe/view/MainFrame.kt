@@ -1,18 +1,12 @@
 package top.vuhe.view
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import top.vuhe.controller.ControllerUnit
-import top.vuhe.model.Context
-import top.vuhe.view.window.LoadingPanel
-import top.vuhe.view.window.OperationPanel
-import top.vuhe.view.window.QuestionPanel
+import top.vuhe.tool.Serialization
+import top.vuhe.Context
 import java.awt.CardLayout
 import java.io.File
 import javax.swing.JFrame
 
 object MainFrame : JFrame("加减法口算练习系统") {
-    private val log: Logger = LoggerFactory.getLogger(MainFrame::class.java)
     private val CARD_LAYOUT = CardLayout()
 
     init {
@@ -36,7 +30,7 @@ object MainFrame : JFrame("加减法口算练习系统") {
     fun loading() {
         startLoading()
 
-        ControllerUnit.readQuestionFromFile(
+        Serialization.readQuestionFromFile(
             File("${Context.FILE_PATH}/${Context.file}")
         )
 

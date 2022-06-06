@@ -1,12 +1,11 @@
-package top.vuhe.controller
+package top.vuhe.tool
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import top.vuhe.model.Context
-import top.vuhe.model.entity.Formula
-import top.vuhe.model.entity.Operator
-import top.vuhe.model.entity.Question
-import kotlin.random.Random
+import top.vuhe.Context
+import top.vuhe.model.Formula
+import top.vuhe.model.Operator
+import top.vuhe.model.Question
 
 abstract class Factory<T> {
     abstract fun produce(): T
@@ -47,9 +46,6 @@ sealed class FormulaFactory(
 ) : Factory<Formula>() {
     companion object {
         private val log: Logger = LoggerFactory.getLogger(FormulaFactory::class.java)
-
-        /** 随机数生产器 */
-        private val RANDOM_NUM = Random(47)
     }
 
     /**
@@ -60,23 +56,19 @@ sealed class FormulaFactory(
      * @return 算式
      */
     override fun produce(): Formula {
-        // 创建生产序列
-        val builderStream = generateSequence(this::build)
-        // 检查并获取生产对象
-        val formula = builderStream.filter { it.check() }.first()
+        // 创建生产序列 检查并获取生产对象
+        val formula = generateSequence {
+            Formula(
+                // 两个数数范围：1 ～ 99
+                a = (1 until 100).random(),
+                b = (1 until 100).random(),
+                // 子类获取运算符
+                op = op
+            )
+        }.filter { it.check() }.first()
 
         log.trace("生产一个算式")
         return formula
-    }
-
-    private fun build(): Formula {
-        return Formula(
-            // 两个数数范围：1 ～ 99
-            a = RANDOM_NUM.nextInt(99) + 1,
-            b = RANDOM_NUM.nextInt(99) + 1,
-            // 子类获取运算符
-            op = op
-        )
     }
 
     /**

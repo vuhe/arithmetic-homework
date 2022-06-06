@@ -1,4 +1,4 @@
-package top.vuhe.controller
+package top.vuhe.tool
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
@@ -7,8 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import top.vuhe.model.Context
-import top.vuhe.model.entity.Formula
+import top.vuhe.Context
+import top.vuhe.model.Formula
 
 class FormulaTest {
     companion object {

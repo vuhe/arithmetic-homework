@@ -1,4 +1,4 @@
-package top.vuhe.model.entity
+package top.vuhe.model
 
 @kotlinx.serialization.Serializable
 class Question(private val questions: List<Node>) : Iterable<Question.Node> by questions {

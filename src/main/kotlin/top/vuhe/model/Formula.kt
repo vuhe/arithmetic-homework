@@ -1,4 +1,4 @@
-package top.vuhe.model.entity
+package top.vuhe.model
 
 @kotlinx.serialization.Serializable
 data class Formula(val a: Int, val op: Operator, val b: Int) {

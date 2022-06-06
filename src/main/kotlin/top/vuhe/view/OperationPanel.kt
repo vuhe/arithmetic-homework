@@ -1,17 +1,14 @@
-package top.vuhe.view.window
+package top.vuhe.view
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.slf4j.LoggerFactory
-import top.vuhe.controller.ControllerUnit
-import top.vuhe.model.Context
-import top.vuhe.view.MainFrame
+import top.vuhe.tool.Serialization
+import top.vuhe.Context
 import java.awt.GridLayout
 import java.io.File
 import javax.swing.*
 
 object OperationPanel : JPanel() {
-    private val log = LoggerFactory.getLogger(OperationPanel::class.java)
     private val buildQuestion = JButton("创建习题集")
     private val selectedExercise = JComboBox<String>()
     private val startExercise = JButton("开始练习")
@@ -19,7 +16,7 @@ object OperationPanel : JPanel() {
     /** 初始化 创建习题按钮 */
     init {
         buildQuestion.addActionListener {
-            ControllerUnit.buildQuestionToFile()
+            Serialization.buildQuestionToFile()
             refreshExerciseList()
         }
     }

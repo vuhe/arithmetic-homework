@@ -1,4 +1,4 @@
-package top.vuhe.controller
+package top.vuhe.tool
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import top.vuhe.model.entity.Question
+import top.vuhe.model.Question
 
 class JsonTest {
     companion object {
